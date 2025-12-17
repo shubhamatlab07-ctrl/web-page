@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Your Personal Website</title>
+    <title>shubhx</title>
     <style>
         /* Basic reset and fonts */
         body {
@@ -13,13 +13,22 @@
             background-color: #f5f5f5;
             color: #333;
             line-height: 1.6;
+            animation: fadeIn 1s ease-in-out; /* Fade-in effect for the entire page */
         }
         a {
             color: #007acc;
             text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s ease; /* Smooth color and scale transition on hover */
         }
         a:hover {
-            text-decoration: underline;
+            color: #005a99;
+            transform: scale(1.05); /* Slight zoom on hover */
+        }
+
+        /* Keyframe for fade-in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Header */
@@ -28,11 +37,20 @@
             border-bottom: 1px solid #ddd;
             padding: 20px;
             text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease; /* Subtle shadow transition */
+        }
+        header:hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
         }
         header h1 {
             margin: 0;
             font-size: 2.5em;
             font-weight: bold;
+            transition: color 0.3s ease;
+        }
+        header h1:hover {
+            color: #007acc;
         }
         nav {
             margin-top: 10px;
@@ -57,6 +75,12 @@
             margin-right: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease, transform 0.2s ease; /* Smooth shadow and lift on hover */
+            animation: fadeIn 1.5s ease-in-out; /* Delayed fade-in for content */
+        }
+        .main-content:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
         }
         .sidebar {
             flex: 1;
@@ -64,15 +88,31 @@
             padding: 20px;
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease, transform 0.2s ease;
+            animation: fadeIn 2s ease-in-out; /* Further delayed fade-in for sidebar */
+        }
+        .sidebar:hover {
+            box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+            transform: translateY(-5px);
         }
 
         /* Post styles */
         .post {
             margin-bottom: 30px;
+            transition: opacity 0.3s ease, transform 0.2s ease;
+            animation: fadeIn 1.8s ease-in-out; /* Fade-in for individual posts */
+        }
+        .post:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
         }
         .post h2 {
             font-size: 1.8em;
             margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        .post h2:hover {
+            color: #007acc;
         }
         .post-meta {
             color: #666;
@@ -87,6 +127,10 @@
         .sidebar h3 {
             font-size: 1.2em;
             margin-bottom: 10px;
+            transition: color 0.3s ease;
+        }
+        .sidebar h3:hover {
+            color: #007acc;
         }
         .sidebar ul {
             list-style: none;
@@ -94,6 +138,10 @@
         }
         .sidebar li {
             margin-bottom: 10px;
+            transition: transform 0.2s ease;
+        }
+        .sidebar li:hover {
+            transform: translateX(5px);
         }
 
         /* Footer */
@@ -103,6 +151,11 @@
             padding: 20px;
             text-align: center;
             margin-top: 20px;
+            box-shadow: 0 -2px 4px rgba(0,0,0,0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        footer:hover {
+            box-shadow: 0 -4px 8px rgba(0,0,0,0.15);
         }
 
         /* Responsive */
@@ -131,9 +184,7 @@
         <main class="main-content">
             <article class="post">
                 <h2>Welcome to My Personal Website</h2>
-                <p class="post-meta">This is only for learning how to deploy site using netlify </p>
-                <p>This is a sample post .The style of Making Software. Here, you can share your thoughts on software development, personal projects, or anything else. The layout is clean and focused on readability.</p>
-            </article>
+                <p>This is a sample post mimicking the style of Making Software. Here, you can share your thoughts on software development, personal projects, or anything else. The layout is clean and focused on readability.</p>            </article>
             <article class="post">
                 <h2>Another Post Title</h2>
                 <p class="post-meta">Posted on September 15, 2023 by You</p>
