@@ -205,14 +205,13 @@
                 <p>This is a sample post mimicking the style of Making Software, now with a dynamic background effect. Here, you can share your thoughts on software development, personal projects, or anything else. The layout is clean and focused on readability.</p>            </article>
             <article class="post">
                 <h2>Another Post Title</h2>
-                <p class="post-meta">Posted on September 15, 2023 by Shubhx</p>
                 <p>More content here. Feel free to add images, links, or code snippets as needed.</p>
             </article>
         </main>
 
         <aside class="sidebar">
             <h3>About Me</h3>
-            <p>I'm Shubhx, a software developer passionate about Web Development. This site is where I share my journey.</p>
+            <p>I'm Shubhx, a software developer passionate about [your interests]. This site is where I share my journey.</p>
             <h3>Recent Posts</h3>
             <ul>
                 <li><a href="#">Welcome to My Personal Website</a></li>
@@ -231,36 +230,88 @@
     </footer>
 
     <script>
-        // Simple particle animation script (inspired by alcohollick.com's effect)
+        // Enhanced particle animation script with more details
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
         let particles = [];
-        const numParticles = 100; // Number of particles
-        const maxDistance = 150; // Max distance for connecting lines
+        const numParticles = 200; // Increased for more detail
+        const maxDistance = 180; // Slightly larger connection range
+        let mouse = { x: null, y: null };
 
-        // Particle class
+        // Track mouse position
+        window.addEventListener('mousemove', (e) => {
+            mouse.x = e.x;
+            mouse.y = e.y;
+        });
+        window.addEventListener('mouseout', () => {
+            mouse.x = null;
+            mouse.y = null;
+        });
+
+        // Particle class with more properties
         class Particle {
             constructor() {
                 this.x = Math.random() * canvas.width;
                 this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 2; // Velocity
-                this.vy = (Math.random() - 0.5) * 2;
-                this.size = Math.random() * 2 + 1;
+                this.vx = (Math.random() - 0.5) * 3; // Faster base speed
+                this.vy = (Math.random() - 0.5) * 3;
+                this.size = Math.random() * 4 + 1; // Varying sizes
+                this.color = `rgba(${Math.random() * 50 + 200}, ${Math.random() * 50 + 200}, 255, ${Math.random() * 0.5 + 0.5})`; // Blue-white variations
+                this.opacity = Math.random() * 0.8 + 0.2;
+                this.trail = []; // For trail effect
             }
             update() {
+                // Mouse attraction
+                if (mouse.x && mouse.y) {
+                    const dx = mouse.x - this.x;
+                    const dy = mouse.y - this.y;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    if (distance < 100) {
+                        this.vx += dx / distance * 0.1;
+                        this.vy += dy / distance * 0.1;
+                    }
+                }
+
+                // Update position
                 this.x += this.vx;
                 this.y += this.vy;
+
+                // Bounce off edges
                 if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
                 if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+
+                // Add to trail
+                this.trail.push({ x: this.x, y: this.y, opacity: this.opacity });
+                if (this.trail.length > 10) this.trail.shift(); // Limit trail length
+
+                // Random acceleration for organic movement
+                this.vx += (Math.random() - 0.5) * 0.1;
+                this.vy += (Math.random() - 0.5) * 0.1;
             }
             draw() {
+                // Draw trail
+                ctx.save();
+                this.trail.forEach((point, index) => {
+                    ctx.globalAlpha = point.opacity * (index / this.trail.length);
+                    ctx.beginPath();
+                    ctx.arc(point.x, point.y, this.size * 0.5, 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                });
+                ctx.restore();
+
+                // Draw particle with glow
+                ctx.save();
+                ctx.shadowBlur = 10;
+                ctx.shadowColor = this.color;
                 ctx.beginPath();
                 ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(255, 255, 255, 0.8)'; // White particles
+                ctx.fillStyle = this.color;
                 ctx.fill();
+                ctx.restore();
             }
         }
 
@@ -277,18 +328,23 @@
                 p.draw();
             });
 
-            // Draw connecting lines
+            // Draw connecting lines with gradient
             for (let i = 0; i < particles.length; i++) {
                 for (let j = i + 1; j < particles.length; j++) {
                     const dx = particles[i].x - particles[j].x;
                     const dy = particles[i].y - particles[j].y;
                     const distance = Math.sqrt(dx * dx + dy * dy);
                     if (distance < maxDistance) {
+                        const gradient = ctx.createLinearGradient(particles[i].x, particles[i].y, particles[j].x, particles[j].y);
+                        gradient.addColorStop(0, particles[i].color);
+                        gradient.addColorStop(1, particles[j].color);
                         ctx.beginPath();
                         ctx.moveTo(particles[i].x, particles[i].y);
                         ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.strokeStyle = `rgba(255, 255, 255, ${1 - distance / maxDistance})`; // Fade with distance
+                        ctx.strokeStyle = gradient;
+                        ctx.globalAlpha = 1 - distance / maxDistance;
                         ctx.stroke();
+                        ctx.globalAlpha = 1;
                     }
                 }
             }
